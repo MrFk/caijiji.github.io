@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hacking on 菜狗小陈</title>
+    <link>http://caijiji.github.io/tags/hacking/</link>
+    <description>Recent content in Hacking on 菜狗小陈</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 15 Mar 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://caijiji.github.io/tags/hacking/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>0CTF-Web-Writeup</title>
+      <link>http://caijiji.github.io/2016/03/15/0ctf-web-writeup/</link>
+      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/03/15/0ctf-web-writeup/</guid>
+      <description>&lt;h2 id=&#34;2016-0ctf-web-writeup&#34;&gt;2016 0CTF Web WriteUp&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Mysql 报错注入</title>
+      <link>http://caijiji.github.io/2016/01/03/mysql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</link>
+      <pubDate>Sun, 03 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/01/03/mysql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</guid>
+      <description>&lt;p&gt;数据库结构 php源码参考&lt;a href=&#34;http://rickgray.me/2014/11/16/error-based-sql-injection.html&#34;&gt;RickGray&amp;rsquo;Blog&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux Penetration</title>
+      <link>http://caijiji.github.io/2015/11/20/linux-penetration/</link>
+      <pubDate>Fri, 20 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/11/20/linux-penetration/</guid>
+      <description>&lt;p&gt;本来是笔记本的东西 正好整理成MarkDown格式 就手抖push了一下&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Meterpreter Guide</title>
+      <link>http://caijiji.github.io/2015/10/29/meterpreter-guide/</link>
+      <pubDate>Thu, 29 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/10/29/meterpreter-guide/</guid>
+      <description>&lt;h1 id=&#34;meterpreter速查指南&#34;&gt;Meterpreter速查指南&lt;/h1&gt;
+
+&lt;p&gt;由于网上很多文章乱而不全或者过期了 所以打算噜这篇来做个笔记～&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>PHPCms Sqli 0day?</title>
+      <link>http://caijiji.github.io/2015/10/28/phpcms-sqli-0day/</link>
+      <pubDate>Wed, 28 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/10/28/phpcms-sqli-0day/</guid>
+      <description>&lt;h2 id=&#34;0kee-phpcmsv9-注入0day分析&#34;&gt;0kee Phpcmsv9 注入0day分析&lt;/h2&gt;
+
+&lt;h4 id=&#34;0x01-注入分析&#34;&gt;0x01 注入分析&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://0kee.360.cn/skywolf_demo/&#34;&gt;http://0kee.360.cn/skywolf_demo/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>纯幻想过程</title>
+      <link>http://caijiji.github.io/2015/05/25/%E7%BA%AF%E5%B9%BB%E6%83%B3%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Mon, 25 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/05/25/%E7%BA%AF%E5%B9%BB%E6%83%B3%E8%BF%87%E7%A8%8B/</guid>
+      <description>&lt;p&gt;一次渗透过程&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>2015 CCTF Web Write Up</title>
+      <link>http://caijiji.github.io/2015/04/27/2015-cctf-web-write-up/</link>
+      <pubDate>Mon, 27 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/04/27/2015-cctf-web-write-up/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;都说phpspy坑！！！ 哪里有( ´◔ ‸◔`)。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>如何快速找到可能拿下的目标</title>
+      <link>http://caijiji.github.io/2015/04/15/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%89%BE%E5%88%B0%E5%8F%AF%E8%83%BD%E6%8B%BF%E4%B8%8B%E7%9A%84%E7%9B%AE%E6%A0%87/</link>
+      <pubDate>Wed, 15 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/04/15/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%89%BE%E5%88%B0%E5%8F%AF%E8%83%BD%E6%8B%BF%E4%B8%8B%E7%9A%84%E7%9B%AE%E6%A0%87/</guid>
+      <description>&lt;p&gt;在做测试的时候 有时候面对一堆子域名会很头疼0.0  而且很多子域名都有诱惑性  比如*.jd.com *.taobao.com 很多子域名都是电商 这种子域名毫无利用价值0.0这个时候需要快速排查
+分享一下自己的办法 大牛有新方法也可以留言一下&amp;gt;..&amp;lt;学习学习&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

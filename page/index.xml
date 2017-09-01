@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on 菜狗小陈</title>
+    <link>http://caijiji.github.io/page/</link>
+    <description>Recent content in Pages on 菜狗小陈</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 05 May 2016 21:48:51 -0700</lastBuildDate>
+    
+	<atom:link href="http://caijiji.github.io/page/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>http://caijiji.github.io/about/</link>
+      <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
+      
+      <guid>http://caijiji.github.io/about/</guid>
+      <description>From CQUPT@0xFA
+喜欢好玩的东西
+乐于交友:)
+mail: cn_xiaoc@163.com </description>
+    </item>
+    
+    <item>
+      <title>Friend</title>
+      <link>http://caijiji.github.io/friend/</link>
+      <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
+      
+      <guid>http://caijiji.github.io/friend/</guid>
+      <description>ZiZi老大: http://www.vanessa-z.cc/
+0xFA-Team: http://0xfa.club/
+Big职业xx选手: http://rickgray.me/
+Ricter菊苣Orz: https://ricterz.me/
+吴大大大大大: http://www.purpleroc.com/
+啥都会的zizuo: http://www.cnblogs.com/junmoxiao
+小葱大牛: http://idoge.cc/
+黑x学弟: http://mr-fk.cn/
+草tm的49: http://49.gs/
+安卓牛: http://thomasking2014.com/
+Hear7v: http://hear7v.duapp.com/</description>
+    </item>
+    
+  </channel>
+</rss>

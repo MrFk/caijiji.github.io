@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on 菜狗小陈</title>
+    <link>http://caijiji.github.io/tags/python/</link>
+    <description>Recent content in Python on 菜狗小陈</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 06 Mar 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://caijiji.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Find Url In Apk</title>
+      <link>http://caijiji.github.io/2016/03/06/find-url-in-apk/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/03/06/find-url-in-apk/</guid>
+      <description>自己根据自己的需要写了一个小工具
+提取App里面的url 或许对!@$@@!有一些帮助~
+Find Url In Apk</description>
+    </item>
+    
+    <item>
+      <title>Wooyun Spider</title>
+      <link>http://caijiji.github.io/2015/05/20/wooyun-spider/</link>
+      <pubDate>Wed, 20 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/05/20/wooyun-spider/</guid>
+      <description>写那么久的Python还没写过爬虫。。 写了一个自动爬取Wooyun漏洞关注数大于20的漏洞 以后加上本地保存功能～
+用法:
+Python wooyun.py 1375  Wooyun Spider</description>
+    </item>
+    
+    <item>
+      <title>Python Fabric 使用心得</title>
+      <link>http://caijiji.github.io/2015/05/18/python-fabric-%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</link>
+      <pubDate>Mon, 18 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/05/18/python-fabric-%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python Requests学习笔记</title>
+      <link>http://caijiji.github.io/2015/03/25/python-requests%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Wed, 25 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/03/25/python-requests%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;h2 id=&#34;转载自己之前的一篇文章&#34;&gt;转载自己之前的一篇文章&lt;/h2&gt;
+
+&lt;p&gt;Python的Requests库支持&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;get put delete head options&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

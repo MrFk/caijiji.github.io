@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ctf on 菜狗小陈</title>
+    <link>http://caijiji.github.io/tags/ctf/</link>
+    <description>Recent content in Ctf on 菜狗小陈</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 25 Apr 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://caijiji.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>IDS-Chicken Writeup</title>
+      <link>http://caijiji.github.io/2016/04/25/ids-chicken-writeup/</link>
+      <pubDate>Mon, 25 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/04/25/ids-chicken-writeup/</guid>
+      <description>&lt;h2 id=&#34;ids-chicken-writeup-cctf&#34;&gt;IDS-Chicken Writeup(CCTF)&lt;/h2&gt;
+
+&lt;p&gt;感觉这题也没多少菊苣想撸所以就写一个writeup mark一下&lt;/p&gt;
+
+&lt;p&gt;题目想法来自与detectify实验室的一篇Bypass CSP的paper和某公司IDS系统报警存在xss而拼凑成的题目&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

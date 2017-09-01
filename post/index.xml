@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 菜狗小陈</title>
+    <link>http://caijiji.github.io/post/</link>
+    <description>Recent content in Posts on 菜狗小陈</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 21 Apr 2017 17:00:21 +0800</lastBuildDate>
+    
+	<atom:link href="http://caijiji.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2017-????-Small-Ticket</title>
+      <link>http://caijiji.github.io/2017/04/21/2017--small-ticket/</link>
+      <pubDate>Fri, 21 Apr 2017 17:00:21 +0800</pubDate>
+      
+      <guid>http://caijiji.github.io/2017/04/21/2017--small-ticket/</guid>
+      <description>&lt;h3 id=&#34;把这个page当作自己平常小事情的记录&#34;&gt;把这个page当作自己平常小事情的记录&lt;/h3&gt;
+
+&lt;p&gt;突然发现自己经常会扔掉自己之前做的一些东西 丢了很多宝贵资源:(&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Frida 学习笔记</title>
+      <link>http://caijiji.github.io/2017/04/03/frida-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 03 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2017/04/03/frida-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;h1 id=&#34;frida&#34;&gt;Frida&lt;/h1&gt;
+
+&lt;h2 id=&#34;hook-神器-windows-macos-linux-ios-android-javscript&#34;&gt;Hook 神器（Windows,MacOS,Linux,iOS,Android,Javscript）&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>2017-0CTF-web writeup</title>
+      <link>http://caijiji.github.io/2017/03/20/2017-0ctf-web-writeup/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2017/03/20/2017-0ctf-web-writeup/</guid>
+      <description>&lt;h1 id=&#34;2017-0ctf-web-writeup&#34;&gt;2017-0ctf-Web Writeup&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>My Vps Install Script</title>
+      <link>http://caijiji.github.io/2017/03/16/my-vps-install-script/</link>
+      <pubDate>Thu, 16 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2017/03/16/my-vps-install-script/</guid>
+      <description>&lt;h2 id=&#34;个人的vps安装脚本&#34;&gt;个人的vps安装脚本&lt;/h2&gt;
+
+&lt;p&gt;发布在这里做个备忘 分为Ubuntu &amp;amp;&amp;amp; Centos&lt;/p&gt;
+
+&lt;p&gt;如果有需要可以看看哈~&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>IDS-Chicken Writeup</title>
+      <link>http://caijiji.github.io/2016/04/25/ids-chicken-writeup/</link>
+      <pubDate>Mon, 25 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/04/25/ids-chicken-writeup/</guid>
+      <description>&lt;h2 id=&#34;ids-chicken-writeup-cctf&#34;&gt;IDS-Chicken Writeup(CCTF)&lt;/h2&gt;
+
+&lt;p&gt;感觉这题也没多少菊苣想撸所以就写一个writeup mark一下&lt;/p&gt;
+
+&lt;p&gt;题目想法来自与detectify实验室的一篇Bypass CSP的paper和某公司IDS系统报警存在xss而拼凑成的题目&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>0CTF-Web-Writeup</title>
+      <link>http://caijiji.github.io/2016/03/15/0ctf-web-writeup/</link>
+      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/03/15/0ctf-web-writeup/</guid>
+      <description>&lt;h2 id=&#34;2016-0ctf-web-writeup&#34;&gt;2016 0CTF Web WriteUp&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Find Url In Apk</title>
+      <link>http://caijiji.github.io/2016/03/06/find-url-in-apk/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/03/06/find-url-in-apk/</guid>
+      <description>自己根据自己的需要写了一个小工具
+提取App里面的url 或许对!@$@@!有一些帮助~
+Find Url In Apk</description>
+    </item>
+    
+    <item>
+      <title>Mysql 报错注入</title>
+      <link>http://caijiji.github.io/2016/01/03/mysql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</link>
+      <pubDate>Sun, 03 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2016/01/03/mysql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</guid>
+      <description>&lt;p&gt;数据库结构 php源码参考&lt;a href=&#34;http://rickgray.me/2014/11/16/error-based-sql-injection.html&#34;&gt;RickGray&amp;rsquo;Blog&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux Penetration</title>
+      <link>http://caijiji.github.io/2015/11/20/linux-penetration/</link>
+      <pubDate>Fri, 20 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/11/20/linux-penetration/</guid>
+      <description>&lt;p&gt;本来是笔记本的东西 正好整理成MarkDown格式 就手抖push了一下&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Meterpreter Guide</title>
+      <link>http://caijiji.github.io/2015/10/29/meterpreter-guide/</link>
+      <pubDate>Thu, 29 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/10/29/meterpreter-guide/</guid>
+      <description>&lt;h1 id=&#34;meterpreter速查指南&#34;&gt;Meterpreter速查指南&lt;/h1&gt;
+
+&lt;p&gt;由于网上很多文章乱而不全或者过期了 所以打算噜这篇来做个笔记～&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>PHPCms Sqli 0day?</title>
+      <link>http://caijiji.github.io/2015/10/28/phpcms-sqli-0day/</link>
+      <pubDate>Wed, 28 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/10/28/phpcms-sqli-0day/</guid>
+      <description>&lt;h2 id=&#34;0kee-phpcmsv9-注入0day分析&#34;&gt;0kee Phpcmsv9 注入0day分析&lt;/h2&gt;
+
+&lt;h4 id=&#34;0x01-注入分析&#34;&gt;0x01 注入分析&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://0kee.360.cn/skywolf_demo/&#34;&gt;http://0kee.360.cn/skywolf_demo/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Already One Month</title>
+      <link>http://caijiji.github.io/2015/09/30/already-one-month/</link>
+      <pubDate>Wed, 30 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/09/30/already-one-month/</guid>
+      <description>&lt;h2 id=&#34;一些毫无逻辑的感想&#34;&gt;一些毫无逻辑的感想&lt;/h2&gt;
+
+&lt;p&gt;看了吴师傅的博文&lt;a href=&#34;http://md.purpleroc.com/life/diary/recording/summarize/2015/07/31/One_month.html&#34;&gt;Already One Month &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然都是英文 但是我勉强还是看的懂~&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>简单分析一个smail文件</title>
+      <link>http://caijiji.github.io/2015/07/29/%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%AAsmail%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Wed, 29 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/07/29/%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%AAsmail%E6%96%87%E4%BB%B6/</guid>
+      <description>&lt;p&gt;#简单分析一个smail文件#&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>纯幻想过程</title>
+      <link>http://caijiji.github.io/2015/05/25/%E7%BA%AF%E5%B9%BB%E6%83%B3%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Mon, 25 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/05/25/%E7%BA%AF%E5%B9%BB%E6%83%B3%E8%BF%87%E7%A8%8B/</guid>
+      <description>&lt;p&gt;一次渗透过程&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Wooyun Spider</title>
+      <link>http://caijiji.github.io/2015/05/20/wooyun-spider/</link>
+      <pubDate>Wed, 20 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/05/20/wooyun-spider/</guid>
+      <description>写那么久的Python还没写过爬虫。。 写了一个自动爬取Wooyun漏洞关注数大于20的漏洞 以后加上本地保存功能～
+用法:
+Python wooyun.py 1375  Wooyun Spider</description>
+    </item>
+    
+    <item>
+      <title>Python Fabric 使用心得</title>
+      <link>http://caijiji.github.io/2015/05/18/python-fabric-%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</link>
+      <pubDate>Mon, 18 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/05/18/python-fabric-%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>2015 CCTF Web Write Up</title>
+      <link>http://caijiji.github.io/2015/04/27/2015-cctf-web-write-up/</link>
+      <pubDate>Mon, 27 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/04/27/2015-cctf-web-write-up/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;都说phpspy坑！！！ 哪里有( ´◔ ‸◔`)。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>如何快速找到可能拿下的目标</title>
+      <link>http://caijiji.github.io/2015/04/15/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%89%BE%E5%88%B0%E5%8F%AF%E8%83%BD%E6%8B%BF%E4%B8%8B%E7%9A%84%E7%9B%AE%E6%A0%87/</link>
+      <pubDate>Wed, 15 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/04/15/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%89%BE%E5%88%B0%E5%8F%AF%E8%83%BD%E6%8B%BF%E4%B8%8B%E7%9A%84%E7%9B%AE%E6%A0%87/</guid>
+      <description>&lt;p&gt;在做测试的时候 有时候面对一堆子域名会很头疼0.0  而且很多子域名都有诱惑性  比如*.jd.com *.taobao.com 很多子域名都是电商 这种子域名毫无利用价值0.0这个时候需要快速排查
+分享一下自己的办法 大牛有新方法也可以留言一下&amp;gt;..&amp;lt;学习学习&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Python Requests学习笔记</title>
+      <link>http://caijiji.github.io/2015/03/25/python-requests%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Wed, 25 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://caijiji.github.io/2015/03/25/python-requests%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;h2 id=&#34;转载自己之前的一篇文章&#34;&gt;转载自己之前的一篇文章&lt;/h2&gt;
+
+&lt;p&gt;Python的Requests库支持&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;get put delete head options&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
