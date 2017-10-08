@@ -140,11 +140,11 @@ chrome_options.add_argument('--disable-gpu')
 
 chrome_options.binary_location = '/opt/google/chrome/chrome'
 
-opener = webdriver.Chrome(chrome_options=chrome_options)
 
 js='''void( (function() { var hash = {}; var a = document.evaluate('//input[(@type=&quot;checkbox&quot; or @type=&quot;radio&quot;) and not(@value=&quot;0&quot;)]//@name', document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null); if (a.snapshotLength) { for (var i = 0; i &lt; a.snapshotLength; i++) { if (! (a.snapshotItem(i).value in hash)) hash[a.snapshotItem(i).value] = 0; hash[a.snapshotItem(i).value]++; } for (i in hash) { document.evaluate('//input[(@type=&quot;checkbox&quot; or @type=&quot;radio&quot;) and not(@value=&quot;0&quot;) and @name=&quot;' + i + '&quot;]', document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(Math.floor(Math.random() * hash[i])).click(); } } var objs = document.getElementsByTagName(&quot;textarea&quot;); for (var i=0;i&lt;objs.length;i++) { objs[i].focus(); objs[i].value = &quot;我爱学习&quot;; objs[i].blur(); } var choose = document.getElementsByTagName(&quot;select&quot;); for (var i=0;i&lt;choose.length;i++) { choose[i].focus(); choose[i].value = &quot;1&quot;; choose[i].blur(); } }) () ) ;var btn = document.getElementById(&quot;next_button&quot;); window.setTimeout(btn.click(),1000); '''  
 
 for i in range(1000):
+    opener = webdriver.Chrome(chrome_options=chrome_options)
     opener.get('http://www.wenjuan.in/s/yamUF3')
     opener.execute_script(js) 
     cookies = opener.get_cookies()
